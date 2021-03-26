@@ -9,18 +9,20 @@ import urllib.request as urllib2
 # img = Image.open(urllib2.urlopen('https://i.imgur.com/7TIpiRc.png'))
 # img = Image.open('input_starrynight_bad.png')
 # img = Image.open('input_paris_bad.png')
-img = Image.open('input_paris.png')
+#img = Image.open('input_paris.png')
+#img = Image.open('zzz.png')
+img = Image.open('mosaic_paris_autolev.png')  # mosaic10_142_resized.png')
 
 IMG_WIDTH = img.width
 IMG_HEIGHT = img.height
 
 # number of pixels a column is allowed to vertically shift in one direction
-MAX_SHIFT_RANGE = 4
+MAX_SHIFT_RANGE = 16
 # how much of the image to process ( set to a smaller value )
 # normally this process takes about 5 minutes to run for the whole image
 # using the default shift range of 4 pixels.
 # so you may want to set to a smaller value for experimental changes
-MAX_IMAGE_WIDTH_TO_ALIGN = IMG_WIDTH  # Default value: IMG_WIDTH
+MAX_IMAGE_WIDTH_TO_ALIGN = 20  # 100  # IMG_WIDTH  # Default value: IMG_WIDTH
 
 # create target image (filled with red)
 target = Image.new(
@@ -32,6 +34,11 @@ pixels = target.load()
 
 def getColorLAB(pixel):
     r, g, b = pixel
+
+    r = math.floor(r/10) * 10
+    g = math.floor(g/10) * 10
+    b = math.floor(b/10) * 10
+
     return convert_color(sRGBColor(r/255, g/255, b/255), LabColor)
 
 # supposedly the most accurate way to measure human perceptible color difference
@@ -80,6 +87,7 @@ for x in range(MAX_IMAGE_WIDTH_TO_ALIGN):
         y = BEST_Y
         # draw strip at best y-location
         target.paste(img_column_strip, (x, y))
+        pixels = target.load()
 
 # show output
 # target = target.convert("RGBA")
